@@ -37,6 +37,65 @@ The JSON structure contains:
   - `z`: Depth information (when available)
   - `visibility`: Confidence score for landmark detection (0-1)
 
+#### Landmark Indices and Body Parts
+
+ML Kit detects 33 landmarks, each representing a specific body part. The landmarks in the JSON file follow this order:
+
+```
+0: nose
+1: left eye (inner)
+2: left eye
+3: left eye (outer)
+4: right eye (inner)
+5: right eye
+6: right eye (outer)
+7: left ear
+8: right ear
+9: mouth (left)
+10: mouth (right)
+11: left shoulder
+12: right shoulder
+13: left elbow
+14: right elbow
+15: left wrist
+16: right wrist
+17: left pinky
+18: right pinky
+19: left index
+20: right index
+21: left thumb
+22: right thumb
+23: left hip
+24: right hip
+25: left knee
+26: right knee
+27: left ankle
+28: right ankle
+29: left heel
+30: right heel
+31: left foot index
+32: right foot index
+```
+
+For squat detection, the most important landmarks are the hips (23-24), knees (25-26), and ankles (27-28), as they provide the key information about the squat position.
+
+#### Understanding Normalized Coordinates
+
+The coordinates in the JSON file are normalized to make the pose detection scale and position invariant:
+
+- **Normalization**: All coordinates are scaled to a range of 0-1, where:
+  - `x`: 0 is the left edge of the image, 1 is the right edge
+  - `y`: 0 is the top edge of the image, 1 is the bottom edge
+  - `z`: Represents depth when available (relative to the hip center)
+
+- **Benefits of normalization**:
+  - Works regardless of camera resolution
+  - Works for people of different heights
+  - Works at different distances from the camera
+  - Makes pose comparison more reliable
+
+- **Example**: In a squat_down pose, the knees (landmarks 25-26) would have higher y-values (closer to 1) compared to a squat_up pose, indicating their lower position in the frame.
+
 ### 2. ML Kit Pose Detection
 
 1. The camera feed is processed frame-by-frame using ML Kit's pose detection
@@ -78,3 +137,6 @@ The application includes a debug mode that displays:
 - Flutter 2.0 or higher
 - Camera-enabled device
 - ML Kit dependencies
+
+## Example Squat video
+Please use this video to test the detection https://youtube.com/shorts/SLOkdLLWj8A?si=_c8Ym2iDCb3Lk5Uw
